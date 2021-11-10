@@ -40,7 +40,7 @@ app.get('/earrings',(req,res)=>{
     })
 })*/
 //http://localhost:8210/earrings/4
-/*
+
 app.get('/earrings/:productid',(req,res)=>{
     var productid=req.params.productid;
     db.collection('earrings').find({productid:productid}).toArray((err,result)=>{
@@ -48,8 +48,8 @@ app.get('/earrings/:productid',(req,res)=>{
         res.send(result)
     })
 })
-*/
-//http://localhost:8210/earrings?productid=1
+
+/*//http://localhost:8210/earrings?productid=1
 app.get('/earrings',(req,res)=>{
     var productid=req.query.productid;
     db.collection('earrings').find({productid:productid}).toArray((err,result)=>{
@@ -57,6 +57,7 @@ app.get('/earrings',(req,res)=>{
         res.send(result)
     })
 })
+*/
 /*// list all restaurants
 app.get('/restaurants',(req,res)=>{
     db.collection('restaurants').find().toArray
