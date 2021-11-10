@@ -49,6 +49,57 @@ app.get('/earrings/:productid',(req,res)=>{
     })
 })
 
+// list all hairaccessories
+app.get('/Hairacc',(req,res)=>{
+    db.collection('Hairacc').find().toArray
+    ((err,result) =>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+// http://localhost:8210/Hairacc/1
+app.get('/Hairacc/:productid',(req,res)=>{
+    var productid=req.params.productid;
+    db.collection('Hairacc').find({productid:productid}).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+
+// list all eyemask
+app.get('/eyemask',(req,res)=>{
+    db.collection('eyemask').find().toArray
+    ((err,result) =>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+// http://localhost:8210/eyemask/1
+app.get('/eyemask/:productid',(req,res)=>{
+    var productid=req.params.productid;
+    db.collection('eyemask').find({productid:productid}).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+
+// list all eyemask
+app.get('/Sunhat',(req,res)=>{
+    db.collection('Sunhat').find().toArray
+    ((err,result) =>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+// http://localhost:8210/eyemask/1
+app.get('/Sunhat/:productid',(req,res)=>{
+    var productid=req.params.productid;
+    db.collection('Sunhat').find({productid:productid}).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+
 /*//http://localhost:8210/earrings?productid=1
 app.get('/earrings',(req,res)=>{
     var productid=req.query.productid;
@@ -58,173 +109,6 @@ app.get('/earrings',(req,res)=>{
     })
 })
 */
-/*// list all restaurants
-app.get('/restaurants',(req,res)=>{
-    db.collection('restaurants').find().toArray
-    ((err,result) =>{
-        if(err) throw err;
-        res.send(result)
-    })
-})*/
-  //query example
-/*app.get('/earrings',(req,res) =>{
-    var query = {}
-    if(req.query.stateId){
-        query={state_id:Number(req.query.stateId)}
-        console.log(query)
-    }else if(req.query.mealtype_id){
-        query={"id":Number(req.query.id)}
-    }
-    db.collection('earrings').find(query).toArray((err,result)=>{
-        if(err) throw err;
-        res.send(result)
-    })
-})*/
-
-/*
-//query example
-app.get('/restaurant',(req,res) =>{
-    var query = {}
-    if(req.query.stateId){
-        query={state_id:Number(req.query.stateId)}
-        console.log(query)
-    }else if(req.query.mealtype_id){
-        query={"mealTypes.mealtype_id":Number(req.query.mealtype_id)}
-    }
-    db.collection('restaurants').find(query).toArray((err,result)=>{
-        if(err) throw err;
-        res.send(result)
-    })
-})
-//filterapi
-//(http://localhost:8210/filter/1?lcost=500&hcost=600)
-app.get('/filter/:mealType',(req,res)=>{
-    var sort={cost:1}
-    var skip=0;
-    var limit=100000000000;
-    if(req.query.sortkey){
-        sort={cost:req.query.sortkey}
-    }
-    if(req.query.skip && req.query.limit){
-        skip = Number(req.query.skip);
-        limit = Number(req.query.limit)
-    }
-    var mealType = req.params.mealType;
-    var query = {"mealTypes.mealtype_id":Number(mealType)};
-    if(req.query.cuisine && req.query.lcost && req.query.hcost){
-        query={
-            $and:[{cost:{$gt:Number(req.query.lcost),$lt:Number(req.query.hcost)}}],
-            "cuisines.cuisine_id":Number(req.query.cuisine),
-            "mealTypes.mealtype_id":Number(mealType)
-        }
-    }
-    else if(req.query.cuisine){
-        query = {"mealTypes.mealtype_id":mealType,"cuisines.cuisine_id":Number(req.query.cuisine) }
-        //query={"mealTypes.mealtype_id":mealType,"Cuisines.cuisine_id":req.query.cuisine}
-    }
-    else if(req.query.lcost && req.query.hcost){
-        var lcost = Number(req.query.lcost);
-        var hcost = Number(req.query.hcost);
-        query={$and:[{cost:{$gt:lcost,$lt:hcost}}],"mealTypes.mealtype_id":Number(mealType)}
-    }
-    db.collection('restaurants').find(query).sort(sort).skip(skip).limit(limit).toArray((err,result)=>{
-        if(err) throw err;
-        res.send(result)
-    })
-})
-
-
-//list all quicksearches
-app.get('/quicksearch',(req,res)=>{
-    db.collection('mealType').find().toArray
-    ((err,result) =>{
-        if(err) throw err;
-        res.send(result)
-    })
-})
-
-//list all quicksearches
-app.get('/accessories',(req,res)=>{
-    db.collection('earrings').find().toArray
-    ((err,result) =>{
-        if(err) throw err;
-        res.send(result)
-    })
-})
-//restaurant details
-app.get('/details/:id',(req,res)=>{
-    var id=req.params.id
-    db.collection('restaurants').find({restaurant_id:Number(id)}).toArray((err,result)=>{
-        if(err) throw err;
-        res.send(result)
-    }) 
-})
-//menu details
-app.get('/menu/:id',(req,res)=>{
-    var id=req.params.id
-    db.collection('menu').find({restaurant_id:Number(id)}).toArray((err,result)=>{
-        if(err) throw err;
-        res.send(result)
-    }) 
-})
-//place order 
-app.post('/placeOrder',(req,res)=>{
-    console.log(req.body);
-    db.collection('orders').insert(req.body,(err,result)=>{
-        if(err) throw err;
-        res.send("order placed")
-    })
-})
-app.get('/viewOrder',(req,res)=>{
-    var query = {}
-    if(req.query.email){
-        query = {email:req.query.email}
-    }
-    db.collection('orders').find(query).toArray((err,result)=>{
-        if(err) throw err;
-        res.send(result)
-    })
-})
-app.get('/viewOrder/:id',(req,res)=>{
-    var id = mongo.ObjectId(req.params.id);
-    db.collection('orders').find({_id:id}).toArray((err,result)=>{
-        if(err)throw err;
-        res.send(result)
-    })
-})
-app.delete('/deleteOrder',(req,res)=>{
-    db.collection('orders').remove({},(err,result)=>{
-        if(err) throw err;
-        res.send(result)
-    })
-})
-app.put('/updateStatus/:id',(req,res) => {
-    var id = mongo.ObjectId(req.params.id);
-    var status = 'Pending';
-    var statuVal = 2
-    if(req.query.status){
-        statuVal = Number(req.query.status)
-        if(statuVal == 1){
-            status = 'Accepted'
-        }else if (statuVal == 0){
-            status = 'Rejected'
-        }else{
-            status = 'Pending'
-        }
-    }
-    db.collection('orders').updateOne(
-        {_id:id},
-        {
-            $set:{
-               "status": status
-            }
-        }, (err,result) => {
-            if(err) throw err;
-            res.send(`Your order status is ${status}`)
-        }
-    )
-})*/
-
 MongoClient.connect(mongourl, (err,client) => {
     if(err) console.log("Error While Connecting");
     db = client.db('accessories');
