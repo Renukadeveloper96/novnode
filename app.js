@@ -22,10 +22,25 @@ app.get('/',(req,res) =>{
     res.send("welcome to Api 2")
 })
 
-//list all cities
+//list all accessories
+
 app.get('/earrings',(req,res)=>{
     db.collection('earrings').find().toArray
     ((err,result) =>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+app.get('/all',(req,res)=>{
+    db.collection('all').find().toArray
+    ((err,result) =>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+app.get('/all/:productid',(req,res)=>{
+    var productid=req.params.productid;
+    db.collection('all').find({productid:productid}).toArray((err,result)=>{
         if(err) throw err;
         res.send(result)
     })
