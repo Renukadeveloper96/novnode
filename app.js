@@ -19,18 +19,10 @@ var  db;
 
 //get
 app.get('/',(req,res) =>{
-    res.send("welcome to Api 2")
+    res.send("welcome to accessories")
 })
 
 //list all accessories
-
-app.get('/earrings',(req,res)=>{
-    db.collection('earrings').find().toArray
-    ((err,result) =>{
-        if(err) throw err;
-        res.send(result)
-    })
-})
 app.get('/all',(req,res)=>{
     db.collection('all').find().toArray
     ((err,result) =>{
@@ -45,6 +37,20 @@ app.get('/all/:productid',(req,res)=>{
         res.send(result)
     })
 })
+
+app.get('/earrings',(req,res) =>{
+    var query = {}
+    if(req.query.stateId){
+        query={state_id:Number(req.query.stateId)}
+        console.log(query)
+    }else if(req.query.ProductId){
+        query={"type.ProductId":Number(req.query.ProductId)}
+    }
+    db.collection('Hairacc').find(query).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
  //list all cities
 /*app.get('/earrings/:cityId',(req,res)=>{
     var cityId=req.params.cityId;
@@ -54,6 +60,13 @@ app.get('/all/:productid',(req,res)=>{
         res.send(result)
     })
 })*/
+app.get('/earrings',(req,res)=>{
+    db.collection('earrings').find().toArray
+    ((err,result) =>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
 //http://localhost:8210/earrings/4
 
 app.get('/earrings/:productid',(req,res)=>{
