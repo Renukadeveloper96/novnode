@@ -22,14 +22,84 @@ app.get('/',(req,res) =>{
     res.send("welcome to accessories")
 })
 
-
-//list all quicksearches
-app.get('/quicksearch',(req,res)=>{
-    db.collection('main').find().toArray
+app.get('/mains',(req,res)=>{
+    db.collection('mains').find().toArray
     ((err,result) =>{
         if(err) throw err;
         res.send(result)
     })
+})
+
+//query example
+app.get('/main',(req,res) =>{
+    var query = {}
+    if(req.query.stateId){
+        query={state_id:Number(req.query.stateId)}
+        console.log(query)
+    }else if(req.query.mealtype_id){
+        query={"type.Product_Id":Number(req.query.mealtype_id)}
+    }
+    db.collection('mains').find(query).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+//filterapi
+//(http://localhost:8210/filter/1?lcost=400&hcost=1500)
+app.get('/filter/:mealType',(req,res)=>{
+    console.log(req.params)
+    console.log(req.query)
+    var sort={cost:1}
+    var skip=0;
+    var limit=100000000000;
+    if(req.query.sortkey){
+        sort={cost:req.query.sortkey}
+    }
+    if(req.query.skip && req.query.limit){
+        skip = Number(req.query.skip);
+        limit = Number(req.query.limit)
+    }
+    var mealType = Number(req.params.mealType);
+    var query = {"type.Product_Id":Number(mealType)};
+    if(req.query.cuisine && req.query.lcost && req.query.hcost){
+        query={
+            $and:[{cost:{$gt:Number(req.query.lcost),$lt:Number(req.query.hcost)}}],
+            "Subtype.sub_id":Number(req.query.cuisine),
+            "type.Product_Id":Number(mealType)
+        }
+    }
+    else if(req.query.cuisine){
+        query = {"type.Product_Id":mealType,"Subtype.sub_id":Number(req.query.cuisine) }
+        console.log(query)
+        //query={"mealTypes.mealtype_id":mealType,"Cuisines.cuisine_id":req.query.cuisine}
+    }
+    else if(req.query.lcost && req.query.hcost){
+        var lcost = Number(req.query.lcost);
+        var hcost = Number(req.query.hcost);
+        query={$and:[{cost:{$gt:lcost,$lt:hcost}}],"type.Product_Id":Number(mealType)}
+    }
+    db.collection('mains').find(query).sort(sort).skip(skip).limit(limit).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+
+//list all quicksearches
+app.get('/quicksearch',(req,res)=>{
+    db.collection('mains').find().toArray
+    ((err,result) =>{
+        if(err) throw err;
+        res.send(result)
+    })
+})
+//restaurant details
+//http://localhost:8210/details/3
+app.get('/details/:id',(req,res)=>{
+    var id=req.params.id
+    db.collection('mains').find({product_id:id}).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    }) 
 })
 
 //list all accessories
