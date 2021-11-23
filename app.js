@@ -96,10 +96,25 @@ app.get('/quicksearch',(req,res)=>{
 //http://localhost:8210/details/3
 app.get('/details/:id',(req,res)=>{
     var id=req.params.id
-    db.collection('mains').find({product_id:id}).toArray((err,result)=>{
+    db.collection('mains').find({product_id:Number(id)}).toArray((err,result)=>{
         if(err) throw err;
         res.send(result)
     }) 
+})
+app.get('/menu/:id',(req,res)=>{
+    var id=req.params.id
+    console.log(id)
+    db.collection('menu').find({product_id:Number(id)}).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    }) 
+})
+app.post('/menuItem',(req,res)=>{
+    db.collection('menu').find({menu_id:{$in:req.body}}).toArray((err,result)=>{
+        if(err) throw err;
+        res.send(result)
+    }) 
+    
 })
 
 //list all accessories
