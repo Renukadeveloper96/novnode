@@ -13,7 +13,8 @@ app.use (bodyParser.urlencoded({extended:true}));
 app.use (bodyParser.json());
 app.use (cors());
 //const mongourl ="mongodb://localhost:27017"
-const mongourl ="mongodb+srv://zomato:zomato77@cluster0.nbutl.mongodb.net/accessories?retryWrites=true&w=majority";
+const mongourl ="mongodb+srv://zomato:zomato23@cluster0.nbutl.mongodb.net/accessories?retryWrites=true&w=majority";
+
 
 var  db;  
 
